@@ -1,0 +1,6 @@
+{
+    "port":8080,
+    "serve_root":"www",
+    "default_doc":["index.html","index.htm"],
+    "profile":true
+}

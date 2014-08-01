@@ -1,0 +1,8 @@
+# hidden files to ignore
+.DS_Store
+.localized
+
+# file types to ignore
+*.zip
+*.txt
+*.dmg
