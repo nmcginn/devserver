@@ -24,29 +24,35 @@ function serveStatic(config) {
     var http = require('http');
     var startTime;
     server = http.createServer(function(req, res) {
-        // initial configuration
-        if (config.profile) {
-            startTime = process.hrtime();
-        }
-        var file = config.serve_root + req.url;
-        // check for a default document
-        if (req.url === '/') {
-            for (var i = 0; i < config.default_doc.length; i++) {
-                if (fs.existsSync(file + config.default_doc[i])) {
-                    file += config.default_doc[i];
-                    break;
+        try {
+            // initial configuration
+            if (config.profile) {
+                startTime = process.hrtime();
+            }
+            var file = config.serve_root + req.url;
+            // check for a default document
+            if (req.url === '/') {
+                for (var i = 0; i < config.default_doc.length; i++) {
+                    if (fs.existsSync(file + config.default_doc[i])) {
+                        file += config.default_doc[i];
+                        break;
+                    }
                 }
             }
-        }
-        // see if the file requested exists
-        if (!file.endsWith('/') && fs.existsSync(file)) {
-            // respond affirmatively
-            res.write(fs.readFileSync(file));
-            res.end();
-        } else {
-            // respond negatively
-            res.statusCode = 404;
-            res.end(http.STATUS_CODES[res.statusCode]);
+            
+            // see if the file requested exists
+            if (!file.endsWith('/') && fs.existsSync(file)) {
+                // respond affirmatively
+                res.write(fs.readFileSync(file));
+                res.end();
+            } else {
+                // respond negatively
+                res.statusCode = 404;
+                res.end(http.STATUS_CODES[res.statusCode]);
+            }
+        } catch (err) {
+            res.statusCode = 500;
+            res.end(http.STATUS_CODES[res.statusCode] + '\n' + err);
         }
         // final request tasks (response already sent)
         if (config.profile) {
