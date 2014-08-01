@@ -1,3 +1,6 @@
+# folders to ignore
+__MACOSX/
+
 # hidden files to ignore
 .DS_Store
 .localized
