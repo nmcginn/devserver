@@ -1,0 +1,12 @@
+{
+    "selector": ["source.js","source.json"],
+    "osx":{
+        "cmd": ["./server.sh", "$file"]
+    },
+    "linux":{
+        "cmd": ["./server.sh", "$file"]
+    },
+    "windows":{
+        "cmd": ["powershell", ".\\server.ps1", "-proc", "$file"]
+    }
+}

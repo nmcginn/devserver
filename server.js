@@ -2,14 +2,14 @@
 var fs = require('fs');
 var utils = require('./utils.js');
 var configFile = 'config.json';
-var config = JSON.parse(fs.readFileSync(configFile));
+var initialConfig = JSON.parse(fs.readFileSync(configFile));
 var server = {};
 
 // watch file system for changes to configuration
 fs.watchFile(configFile, function(curr, prev) {
     console.log('config change detected');
     // reload the configuration
-    config = JSON.parse(fs.readFileSync(configFile));
+    var config = JSON.parse(fs.readFileSync(configFile));
     if (typeof server !== 'undefined') {
         server.close();
     }
@@ -17,7 +17,7 @@ fs.watchFile(configFile, function(curr, prev) {
 });
 
 // start the server
-serveStatic(config);
+serveStatic(initialConfig);
 
 // server functions
 function serveStatic(config) {
@@ -25,12 +25,13 @@ function serveStatic(config) {
     var startTime;
     server = http.createServer(function(req, res) {
         try {
+            res.setHeader('Connection', "close");
             // initial configuration
             if (config.profile) {
                 startTime = process.hrtime();
             }
             var file = config.serve_root + req.url;
-            // check for a default document
+            // check for a default document, if dir_browsing is off
             if (req.url === '/') {
                 for (var i = 0; i < config.default_doc.length; i++) {
                     if (fs.existsSync(file + config.default_doc[i])) {
@@ -43,16 +44,35 @@ function serveStatic(config) {
             // see if the file requested exists
             if (!file.endsWith('/') && fs.existsSync(file)) {
                 // respond affirmatively
+                res.statusCode = 200;
                 res.write(fs.readFileSync(file));
                 res.end();
+            } else if (file.endsWith('/') && config.directory_browsing) {
+                res.statusCode = 200;
+                try {
+                    var ls = fs.readdirSync(file);
+                    res.write('<div style="font-family:sans-serif">');
+                    for (var i = 0; i < ls.length; i++) {
+                        res.write('<a href="' + ls[i] + '">' + ls[i] + '</a><br />');
+                    }
+                    res.write('</div>');
+                    res.end();
+                } catch (err) {
+                    res.statusCode = 404;
+                    throw err;
+                }
             } else {
                 // respond negatively
                 res.statusCode = 404;
-                res.end(http.STATUS_CODES[res.statusCode]);
+                throw new Error(file + ' Not Found');
             }
         } catch (err) {
-            res.statusCode = 500;
-            res.end(http.STATUS_CODES[res.statusCode] + '\n' + err);
+            if (res.statusCode === 200)
+                res.statusCode = 500;
+            res.write(http.STATUS_CODES[res.statusCode]);
+            if (config.detailed_errors)
+                res.write('\n' + err);
+            res.end();
         }
         // final request tasks (response already sent)
         if (config.profile) {

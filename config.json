@@ -2,5 +2,7 @@
     "port":8080,
     "serve_root":"www",
     "default_doc":["index.html","index.htm"],
-    "profile":true
+    "profile":true,
+    "directory_browsing":true,
+    "detailed_errors":true
 }
