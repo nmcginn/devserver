@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+	<head>
+		<title>My Title</title>
+		<meta name="viewport" content="width=device-width" />
+		<meta charset="utf-8" />
+		<base href="/" />
+		<style type="text/css" media="screen">
+			body {
+				background-color: #DDD;
+				font-family: sans-serif;
+			}
+			.main {
+				padding: 10px;
+			}
+		</style>
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+		<script type="text/javascript">
+			var app = angular.module('app', []);
+			var args = __JSON__;
+
+			app.controller('Controller', function($scope){
+				$scope.error = args.error;
+			});
+		</script>
+	</head>
+	<body ng-app="app" ng-controller="Controller">
+		<div class="main">
+			I couldn't find your file.<br />
+			Here's the message from the server:<br />
+			{{ error }}
+		</div>
+		<!--TODO: make a 404 page that doesn't suck-->
+	</body>
+</html>

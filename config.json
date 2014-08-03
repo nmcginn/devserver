@@ -4,5 +4,6 @@
     "default_doc":["index.html","index.htm"],
     "profile":true,
     "directory_browsing":true,
-    "detailed_errors":true
+    "detailed_errors":true,
+    "custom_errors":true
 }

@@ -51,11 +51,9 @@ function serveStatic(config) {
                 res.statusCode = 200;
                 try {
                     var ls = fs.readdirSync(file);
-                    res.write('<div style="font-family:sans-serif">');
-                    for (var i = 0; i < ls.length; i++) {
-                        res.write('<a href="' + ls[i] + '">' + ls[i] + '</a><br />');
-                    }
-                    res.write('</div>');
+                    var dirlist = fs.readFileSync('./.templates/dirlist.html');
+                    // TODO: pass data to directory listing page
+                    res.write(dirlist);
                     res.end();
                 } catch (err) {
                     res.statusCode = 404;
@@ -69,9 +67,21 @@ function serveStatic(config) {
         } catch (err) {
             if (res.statusCode === 200)
                 res.statusCode = 500;
-            res.write(http.STATUS_CODES[res.statusCode]);
-            if (config.detailed_errors)
-                res.write('\n' + err);
+            var noCustom = false;
+            if (config.custom_errors) {
+                if (fs.existsSync('./.templates/' + res.statusCode + '.html')) {
+                    var errorHtml = fs.readFileSync('./.templates/' + res.statusCode + '.html');
+                    errorHtml = errorHtml.toString().replace('__JSON__', '{"error":"' + err + '"}');
+                    res.write(errorHtml);
+                } else {
+                    noCustom = true;
+                }
+            }
+            if (config.custom_errors && noCustom) {
+                res.write(http.STATUS_CODES[res.statusCode]);
+                if (config.detailed_errors)
+                    res.write('\n' + err);
+            }
             res.end();
         }
         // final request tasks (response already sent)

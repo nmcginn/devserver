@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+	<head>
+		<title>My Title</title>
+		<meta name="viewport" content="width=device-width" />
+		<meta charset="utf-8" />
+		<base href="/" />
+		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="css/styles.css" />
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+		<script type="text/javascript">
+			var app = angular.module('app', []);
+
+			app.controller('Controller', function($scope){
+				$scope.data = {'example':''};
+			});
+		</script>
+	</head>
+	<body ng-app="app" ng-controller="Controller">
+		<input type="textarea" ng-model="data.example" />
+		<div>{{data.example}}</div>
+		<!--TODO: replace template html with directory listing page-->
+	</body>
+</html>
