@@ -2,9 +2,10 @@
 __MACOSX/
 www/dirtest/
 
-# hidden files to ignore
+# files to ignore
 .DS_Store
 .localized
+devserver.sublime-workspace
 
 # file types to ignore
 *.zip

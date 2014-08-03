@@ -52,7 +52,7 @@ function serveStatic(config) {
                 try {
                     var ls = fs.readdirSync(file);
                     var dirlist = fs.readFileSync('./.templates/dirlist.html');
-                    // TODO: pass data to directory listing page
+                    dirlist = dirlist.toString().replace('__JSON__', JSON.stringify(ls));
                     res.write(dirlist);
                     res.end();
                 } catch (err) {
