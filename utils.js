@@ -6,9 +6,9 @@ String.prototype.endsWith = function(suffix) {
 };
 
 exports.log = function(message, config) {
-	console && console.log(message);
-	if (config && config.persist_logs) {
-		// hit that filesystem yo
-		fs.appendFileSync(config.log_file, message + '\n');
-	}
+    console && console.log(message);
+    if (config && config.persist_logs) {
+        // hit that filesystem yo
+        fs.appendFileSync(config.log_file, message + '\n');
+    }
 }
