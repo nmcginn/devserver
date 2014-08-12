@@ -5,5 +5,7 @@
     "profile":true,
     "directory_browsing":true,
     "detailed_errors":true,
-    "custom_errors":true
+    "custom_errors":true,
+    "persist_logs":false,
+    "log_file":"serverlog.txt"
 }

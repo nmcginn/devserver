@@ -7,7 +7,7 @@ var server = {};
 
 // watch file system for changes to configuration
 fs.watchFile(configFile, function(curr, prev) {
-    console.log('config change detected');
+    utils.log('config change detected', config);
     // reload the configuration
     var config = JSON.parse(fs.readFileSync(configFile));
     if (typeof server !== 'undefined') {
@@ -90,11 +90,11 @@ function serveStatic(config) {
             var seconds = endTime[0] - startTime[0];
             var nanoseconds = endTime[1] - startTime[1];
             var ms = (seconds * 1000) + (nanoseconds / 1000000);
-            console.log(Math.floor(ms) + 'ms - ' + res.statusCode + ' ' + req.method + ' ' + req.url);
+            utils.log(Math.floor(ms) + 'ms - ' + res.statusCode + ' ' + req.method + ' ' + req.url, config);
         } else {
-            console.log(res.statusCode + ' ' + req.method + ' ' + req.url);            
+            utils.log(res.statusCode + ' ' + req.method + ' ' + req.url, config);            
         }
     });
-    console.log('Starting server on port ' + config.port);
+    utils.log('Starting server on port ' + config.port, config);
     server.listen(config.port);
 }
