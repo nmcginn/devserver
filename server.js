@@ -43,6 +43,16 @@ function serveStatic(config) {
             
             // see if the file requested exists
             if (!file.endsWith('/') && fs.existsSync(file)) {
+                // set the appropriate header
+                if (file.endsWith('.js')) {
+                    res.setHeader('content-type', 'text/javascript');
+                } else if (file.endsWith('.css')) {
+                    res.setHeader('content-type', 'text/css');
+                } else if (file.endsWith('.html')) {
+                    res.setHeader('content-type', 'text/html');
+                } else {
+                    res.setHeader('content-type', 'text/plain');
+                }
                 // respond affirmatively
                 res.statusCode = 200;
                 res.write(fs.readFileSync(file));
